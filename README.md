@@ -1,2 +1,2 @@
-# mustached-bear
+# CosmicAC
 CSP honors project
