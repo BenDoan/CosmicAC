@@ -28,12 +28,10 @@ assets.url_expire = False
 css = Bundle('css/main.css', 'css/bootstrap.css', 'css/bootstrap-theme.css', filters="cssmin", output='css/gen/packed.css')
 assets.register('css_all', css)
 
-js = Bundle("js/vendor/jquery-1.11.2.min.js", "js/vendor/modernizr-2.8.3.min.js", 'js/bootstrap.js', 'js/main.js', filters="jsmin", output='js/gen/packed.js')
-assets.register('js_all', js)
-
 model = Model(app)
 db = model.db
 
+## Authentication
 class LoginForm(Form):
     name = StringField('name',validators=[DataRequired()])
     password = PasswordField('password',validators=[DataRequired()])
@@ -120,6 +118,13 @@ def getuser():
     return admin.username
 
 @login_required
+@app.route('/signout')
+def signout():
+    logout_user()
+    return redirect('/signin')
+
+##Content
+@login_required
 @app.route('/', methods=['GET'])
 def index():
     if current_user.is_anonymous():
@@ -131,12 +136,6 @@ def index():
 @app.route('/img/<remainder>',methods=['GET'])
 def get_static(remainder):
     return send_from_directory(app.static_folder,request.path[1:])
-
-@login_required
-@app.route('/signout')
-def signout():
-    logout_user()
-    return redirect('/signin')
 
 app.secret_key = "Secret"
 
