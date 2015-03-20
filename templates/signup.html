@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="logincontainer">
+<form action="/signup" method="POST" class="form-signin">
+    <h2 class="form-signin-heading">Sign Up</h2>
+    {% if error != "" %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+    {% endif %}
+    <input type="hidden" name="redirect" value="/"/>
+    {{ form.csrf_token }}
+    {{ form.name(size=20,class="form-control",placeholder="username") }}
+    {{ form.email(size=20,class="form-control",placeholder="email") }}
+    <br/>
+    {{ form.password(placeholder="password",size=20,class="form-control") }}
+    {{ form.repeatpassword(placeholder="retype password",size=20,class="form-control") }}
+    <br/>
+    <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+    <br/>
+    <a href="/signin" class="btn btn-success btn-block">Or Sign in</a>
+</form>
+</div>
+{% endblock %}

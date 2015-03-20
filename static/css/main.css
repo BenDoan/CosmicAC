@@ -1,0 +1,60 @@
+body {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+nav.navbar .username {
+    color: #ddd;
+}
+
+.modal-dialog {
+    width: 100% !important;
+    height: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.modal-content {
+    height:100%;
+    width: 100%;
+    border-radius: 0 !important;
+    padding-top:30%;
+    overflow: auto;
+}
+.form-signin {
+    max-width: 300px;
+    padding: 19px 29px 29px;
+    margin: 0 auto 20px;
+    background-color: white;
+    border: 1px solid #E5E5E5;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
+    -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
+}
+
+div.logincontainer {
+    margin-top:40px;
+}
+
+.box {
+    /*width: 33.2%;*/
+    width:49.5%;
+    position:relative;
+}
+
+.box label{
+    position: absolute;
+    left: -4px;
+    top: -3px;
+}
+
+.box img {
+    width: 100.5%;
+}
+
+img.lichen {
+    width:10%;
+}

@@ -1,0 +1,33 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>CosmicAC - PKI Open House Assistant</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="mobile-web-app-capable" content="yes">
+        <link rel="icon" sizes="192x192" href="/static/img/icon.png">
+        <link rel="icon" type="image/png" href="/static/img/icon.png">
+
+        {% assets "css_all" %}
+        <link rel="stylesheet" href="{{ ASSET_URL }}" media="all" type="text/css">
+        {% endassets %}
+    </head>
+    <body>
+        <!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+            <![endif]-->
+
+            <div class="container">
+            {% block content %}
+            <p>content should be here</p>
+            {% endblock %}
+            <hr>
+            </div> <!-- /container -->
+
+            <script src="{{ url_for("static", filename="js/vendor/jquery-1.11.2.min.js") }}"></script>
+            <script src="{{ url_for("static", filename="js/bootstrap.js") }}"></script>
+            <script src="{{ url_for("static", filename="js/main.js") }}"></script>
+    </body>
+</html>
