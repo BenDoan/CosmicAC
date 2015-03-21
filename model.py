@@ -1,35 +1,29 @@
 from flask.ext.sqlalchemy import SQLAlchemy
-import random
 
 class Model():
     def __init__(self, app):
         self.db = SQLAlchemy(app)
         db = self.db
 
-        class Lichen(db.Model):
+        class Room(db.Model):
             id = db.Column(db.Integer, primary_key=True)
-            short_name = db.Column(db.String)
-            name = db.Column(db.String)
+            title = db.Column(db.String)
+            number = db.Column(db.String)
+            short_description = db.Column(db.String)
+            long_description = db.Column(db.String)
             image = db.Column(db.String)
-            description = db.Column(db.String)
-            passcode = db.Column(db.String)
-            hint = db.Column(db.String)
-            num_found = db.Column(db.Integer)
 
-            def __init__(self, short_name, name, imagepath):
-                self.image = imagepath
-                self.name = name
-                self.short_name = short_name
-                self.num_found = 0
-
-            def verify(self,filepath):
-                contents = zbarimg(filepath)
-                return self.passcode in contents
+            def __init__(self, title, number, short_description="", long_description="", image=""):
+                self.title = title
+                self.number = number
+                self.short_description = short_description
+                self.long_description = long_description
+                self.image = image
 
             def __str__(self):
-                return "(({}, {}, {}, {}))".format(self.id, self.name, self.image, self.description)
+                return "Room: {}".format((self.id, self.title, self.number, self.short_description, self.long_description))
 
-        self.Lichen = Lichen
+        self.Room = Room
 
         class User(self.db.Model):
             id = db.Column(db.Integer, primary_key=True)
@@ -37,21 +31,16 @@ class Model():
             email = db.Column(db.String(120), unique=True)
             password = db.Column(db.String)
             authenticated = db.Column(db.Boolean())
-            is_first_time = db.Column(db.Boolean())
-            hint_access = db.Column(db.String)
+            is_admin = db.Column(db.Boolean())
 
-            current_lichen_id = db.Column(db.Integer, db.ForeignKey('lichen.id'))
-            current_lichen = db.relationship('Lichen', backref=db.backref('users', lazy='dynamic'))
-
-            def __init__(self, username, email):
+            def __init__(self, username, email, is_admin=False):
                 self.username = username
                 self.email = email
                 self.authenticated = False
-                self.is_first_time = True
-                self.current_lichen = User.get_random_lichen()
+                self.is_admin = is_admin
 
-            def __repr__(self):
-                return '<User %r>' % self.username
+            def __str__(self):
+                return "User: {}".format((self.id, self.username, self.email, self.password, self.authenticated, self.is_admin))
 
             def is_authenticated(self) :
                 return self.authenticated
@@ -65,13 +54,4 @@ class Model():
             def get_id(self) :
                 return self.username
 
-            @staticmethod
-            def get_random_lichen():
-                lichens = Lichen.query.all()
-                if len(lichens) > 0:
-                    return random.choice(lichens)
-                else:
-                    return None #TODO: handle this later
-
         self.User = User
-

@@ -5,7 +5,7 @@ from flask.ext.assets import Environment, Bundle
 from htmlmin import minify
 from flask.ext.login import LoginManager,login_user,logout_user, current_user, login_required
 from flask_wtf import Form
-from wtforms import StringField, PasswordField
+from wtforms import StringField, PasswordField, TextField, TextAreaField
 from wtforms.validators import DataRequired
 from passlib.hash import pbkdf2_sha256
 
@@ -35,6 +35,19 @@ db = model.db
 class LoginForm(Form):
     name = StringField('name',validators=[DataRequired()])
     password = PasswordField('password',validators=[DataRequired()])
+
+class SignupForm(Form):
+    name = StringField('name',validators=[DataRequired()])
+    email = StringField('email',validators=[DataRequired()])
+    password = PasswordField('password',validators=[DataRequired()])
+    repeatpassword = PasswordField('repeatpassword',validators=[DataRequired()])
+
+class AddRoomForm(Form):
+    title = TextField('title',validators=[DataRequired()])
+    number = TextField('number',validators=[DataRequired()])
+    short_description = TextAreaField('short_description',validators=[DataRequired()])
+    long_description = TextAreaField('long_description',validators=[DataRequired()])
+    image = TextField('image',validators=[DataRequired()])
 
 def create_user(username,email,password):
     newuser = model.User(username,email)
@@ -88,13 +101,13 @@ def signup():
     error = "some fields were empty"
     if form.validate_on_submit():
         error = "some fields were empty"
-        if request.form["password"] == request.form["repeatpassword"] :
-            user = create_user(request.form["name"],request.form["email"],request.form["password"])
+        if request.form["password"] == request.form["repeatpassword"]:
+            user = create_user(request.form["name"], request.form["email"], request.form["password"])
             user.authenticated = True
             db.session.commit()
             login_user(user)
             return redirect("/")
-        else :
+        else:
             error = "passwords did not match"
     return render_template("signup.html",form = form,error=error)
 
@@ -103,14 +116,6 @@ def signup():
 def logout():
     logout_user()
     return redirect(request.args.get("redirect"))
-
-@app.route('/makeuser', methods=['GET'])
-def makeuser():
-    admin = model.User('admin', 'admin@example.com')
-    admin.password = pbkdf2_sha256.encrypt("password")
-    db.session.add(admin)
-    db.session.commit()
-    return "True"
 
 @app.route('/getuser', methods=['GET'])
 def getuser():
@@ -129,8 +134,34 @@ def signout():
 def index():
     if current_user.is_anonymous():
         return redirect("/signin")
-    return render_template('index.html',form=LoginForm())
+    return render_template('index.html')
 
+@login_required
+@app.route('/rooms', methods=['GET'])
+def rooms():
+    return render_template('rooms.html')
+
+@login_required
+@app.route('/profile', methods=['GET'])
+def profile():
+    return render_template('profile.html')
+
+@login_required
+@app.route('/admin', methods=['GET'])
+def admin():
+    if current_user.is_admin:
+        return render_template('admin.html', form=AddRoomForm())
+
+##Actions
+@login_required
+@app.route('/user/add', methods=['POST'])
+def add_user():
+    if current_user.is_admin:
+        print request.form
+        admin()
+    #return render_template('admin.html', form=AddRoomForm())
+
+##Misc
 @login_required
 @app.route('/js/<remainder>',methods=['GET'])
 @app.route('/img/<remainder>',methods=['GET'])

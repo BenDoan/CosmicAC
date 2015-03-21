@@ -1,0 +1,34 @@
+{% extends "navbarbase.html" %}
+
+{% block navcontent %}
+This is an admin only page
+<form action="/signin" method="POST">
+    <h2 class="form-signin-heading">Add Room</h2>
+    <div class="row">
+        <div class="form-group col-sm-7">
+            {{ form.title(size=20,class="form-control",placeholder="Title") }}
+        </div>
+
+        <div class="form-group col-sm-7">
+            {{ form.number(placeholder="Room Number",size=20,class="form-control") }}
+        </div>
+
+        <div class="form-group col-sm-7">
+            {{ form.short_description(placeholder="Short Description",size=20,class="form-control") }}
+        </div>
+
+        <div class="form-group col-sm-7">
+            {{ form.long_description(placeholder="Long Description",size=20,class="form-control") }}
+        </div>
+
+        <div class="form-group col-sm-7">
+            {{ form.image(placeholder="Image",size=20,class="form-control") }}
+        </div>
+        <br/>
+
+        <div class="form-group col-sm-7">
+            <button type="submit" class="btn btn-primary btn-block">Submit</button>
+        </div>
+    </div>
+</form>
+{% endblock %}
