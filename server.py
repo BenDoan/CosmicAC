@@ -33,24 +33,24 @@ db = model.db
 
 ## Authentication
 class LoginForm(Form):
-    name = StringField('name',validators=[DataRequired()])
-    password = PasswordField('password',validators=[DataRequired()])
+    name = StringField('name', validators=[DataRequired()])
+    password = PasswordField('password', validators=[DataRequired()])
 
 class SignupForm(Form):
-    name = StringField('name',validators=[DataRequired()])
-    email = StringField('email',validators=[DataRequired()])
-    password = PasswordField('password',validators=[DataRequired()])
-    repeatpassword = PasswordField('repeatpassword',validators=[DataRequired()])
+    name = StringField('name', validators=[DataRequired()])
+    email = StringField('email', validators=[DataRequired()])
+    password = PasswordField('password', validators=[DataRequired()])
+    repeatpassword = PasswordField('repeatpassword', validators=[DataRequired()])
 
 class AddRoomForm(Form):
-    title = TextField('title',validators=[DataRequired()])
-    number = TextField('number',validators=[DataRequired()])
-    short_description = TextAreaField('short_description',validators=[DataRequired()])
-    long_description = TextAreaField('long_description',validators=[DataRequired()])
-    image = TextField('image',validators=[DataRequired()])
+    title = TextField('title', validators=[DataRequired()])
+    number = TextField('number', validators=[DataRequired()])
+    short_description = TextAreaField('short_description', validators=[DataRequired()])
+    long_description = TextAreaField('long_description', validators=[DataRequired()])
+    image = TextField('image', validators=[DataRequired()])
 
-def create_user(username,email,password):
-    newuser = model.User(username,email)
+def create_user(username, email, password, is_admin):
+    newuser = model.User(username,email, is_admin=is_admin)
     newuser.password = pbkdf2_sha256.encrypt(password)
     db.session.add(newuser)
     db.session.commit()
@@ -66,10 +66,10 @@ def authenticate():
     print "Authenticating"
     form = LoginForm()
     if form.validate_on_submit():
-        users = model.User.query.filter_by(username = request.form["name"])
+        users = model.User.query.filter_by(username=request.form["name"])
         user = users.first()
         if user != None :
-            if pbkdf2_sha256.verify(request.form["password"],user.password) :
+            if pbkdf2_sha256.verify(request.form["password"], user.password) :
                 user.authenticated = True
                 db.session.commit()
                 login_user(user)
