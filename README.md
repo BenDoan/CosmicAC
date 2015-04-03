@@ -15,7 +15,7 @@ python setup.py
 
 ## To start server
 ```bash
-python server.py
+python cosmicac.py
 
 or
 
