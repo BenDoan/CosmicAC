@@ -6,6 +6,8 @@ class Model():
         db = self.db
 
         class Room(db.Model):
+            __tablename__ = 'rooms'
+
             id = db.Column(db.Integer, primary_key=True)
             title = db.Column(db.String)
             number = db.Column(db.String)
@@ -26,6 +28,8 @@ class Model():
         self.Room = Room
 
         class User(self.db.Model):
+            __tablename__ = 'users'
+
             id = db.Column(db.Integer, primary_key=True)
             username = db.Column(db.String(80), unique=True)
             email = db.Column(db.String(120), unique=True)
@@ -53,5 +57,20 @@ class Model():
 
             def get_id(self) :
                 return self.username
+
+        class UserHistory(self.db.Model):
+            __tablename__ = 'user_history'
+
+            id = db.Column(db.Integer, primary_key=True)
+
+            user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+            user = db.relationship('User', backref=db.backref('UserHistory', lazy='dynamic'))
+
+            room_id = db.Column(db.Integer, db.ForeignKey('rooms.id'))
+            room = db.relationship('Room', backref=db.backref('UserHistory', lazy='dynamic'))
+
+            def __init__(self, user, room):
+                self.user = user
+                self.room = room
 
         self.User = User

@@ -49,8 +49,8 @@ class AddRoomForm(Form):
     long_description = TextAreaField('long_description', validators=[DataRequired()])
     image = TextField('image', validators=[DataRequired()])
 
-def create_user(username, email, password, is_admin):
-    newuser = model.User(username,email, is_admin=is_admin)
+def create_user(username, email, password):
+    newuser = model.User(username,email)
     newuser.password = pbkdf2_sha256.encrypt(password)
     db.session.add(newuser)
     db.session.commit()

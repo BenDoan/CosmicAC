@@ -14,4 +14,10 @@ python setup.py
 ```
 
 ## To start server
+```bash
 python server.py
+
+or
+
+gunicorn cosmicac:app
+```
