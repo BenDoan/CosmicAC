@@ -1,4 +1,4 @@
-from server import db, create_user, model
+from cosmicac import db, create_user, model
 
 db.create_all()
 
