@@ -1,7 +1,13 @@
 {% extends "navbarbase.html" %}
 
 {% block navcontent %}
-This is an admin only page
+This is an admin only page <br />
 
-This is where I will put the d3 graphs
+This is where I will put the d3 graphs <br /><br />
+data: <br /> <br />
+
+{% for entry in data %}
+    <p>{{ entry.user.username + " "}}{{ entry.room.title }}</p><br />
+  {% else %}
+{% endfor %}
 {% endblock %}

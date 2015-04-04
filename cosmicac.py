@@ -58,6 +58,23 @@ def create_user(username, email, password, is_admin=False):
     db.session.add(newuser)
     db.session.commit()
     return newuser
+	
+def create_room(name, number, shortDesc, longDesc, img):
+    #Image will not be working yet
+    newRoom = model.Room(name, number, shortDesc, longDesc, img)
+    db.session.add(newRoom)
+    db.session.commit()
+    return newRoom
+	
+def create_userHistory(userName, roomName):
+    users = model.User.query.filter_by(username=userName)
+    user = users.first()
+    rooms = model.Room.query.filter_by(title=roomName)
+    room = rooms.first()
+    newhistory = model.UserHistory(user, room)
+    db.session.add(newhistory)
+    db.session.commit()
+    return newhistory
 
 @loginmanager.user_loader
 def load_user(userid):
@@ -158,8 +175,10 @@ def admin():
 @login_required
 @app.route('/stats', methods=['GET'])
 def stats():
+    users = model.UserHistory.query.all()
+    user = users[0]
     if current_user.is_admin:
-        return render_template('stats.html', form=AddRoomForm())
+        return render_template('stats.html', form=AddRoomForm(), data = users)
 
 ##Actions
 @login_required
