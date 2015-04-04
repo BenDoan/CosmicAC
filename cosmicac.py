@@ -10,13 +10,16 @@ from wtforms.validators import DataRequired
 from passlib.hash import pbkdf2_sha256
 
 from model import Model
+import platform
 
 app = Flask(__name__)
 loginmanager = LoginManager()
 loginmanager.init_app(app)
 
-
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/cosmicac.db'
+if platform.system().startswith('Win'):
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:\\temp\\cosmicac.db'
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/cosmicac.db'
 
 app.config['DEBUG'] = True
 app.config['PROPAGATE_EXCEPTIONS'] = True
@@ -171,4 +174,4 @@ def get_static(remainder):
 app.secret_key = "Secret"
 
 if __name__ == "__main__":
-    app.run(host="0.0.0")
+    app.run(host="0.0.0.0")
