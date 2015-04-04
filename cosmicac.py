@@ -154,6 +154,12 @@ def profile():
 def admin():
     if current_user.is_admin:
         return render_template('admin.html', form=AddRoomForm())
+		
+@login_required
+@app.route('/stats', methods=['GET'])
+def stats():
+    if current_user.is_admin:
+        return render_template('stats.html', form=AddRoomForm())
 
 ##Actions
 @login_required
