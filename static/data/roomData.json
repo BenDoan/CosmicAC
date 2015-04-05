@@ -1,0 +1,8 @@
+{
+      "items": [
+        {"text": "Java", "count": "236"},
+        {"text": ".Net", "count": "382"},
+      ],
+      "eval": function (item) {return item.count;},
+      "classed": function (item) {return item.text.split(" ").join("");}
+    }

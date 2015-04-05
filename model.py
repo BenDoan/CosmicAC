@@ -23,7 +23,10 @@ class Model():
                 self.image = image
 
             def __str__(self):
-                return "Room: {}".format((self.id, self.title, self.number, self.short_description, self.long_description))
+				return "Room: {}".format((self.id, self.title, self.number, self.short_description, self.long_description))
+				
+            def get_id_num(self):
+			    return self.id
 
         self.Room = Room
 
@@ -56,7 +59,10 @@ class Model():
                 return False
 
             def get_id(self) :
-                return self.username
+				return self.username
+			
+            def get_id_num(self):
+			    return self.id
 
         class UserHistory(self.db.Model):
             __tablename__ = 'user_history'
@@ -74,3 +80,4 @@ class Model():
                 self.room = room
 
         self.User = User
+        self.UserHistory = UserHistory

@@ -1,4 +1,6 @@
 from flask import *
+import logging
+from logging.handlers import RotatingFileHandler
 
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.assets import Environment, Bundle
@@ -11,6 +13,7 @@ from passlib.hash import pbkdf2_sha256
 
 from model import Model
 import platform
+import json
 
 app = Flask(__name__)
 loginmanager = LoginManager()
@@ -175,10 +178,28 @@ def admin():
 @login_required
 @app.route('/stats', methods=['GET'])
 def stats():
-    users = model.UserHistory.query.all()
+    users = model.UserHistory.query.all() 
+    list1 = [{"text": "Java", "count": "236"},{"text": ".Net", "count": "382"}]
     user = users[0]
     if current_user.is_admin:
-        return render_template('stats.html', form=AddRoomForm(), data = users)
+        return render_template('stats.html')
+		
+@app.route('/_get_stats')
+def get_stats():
+    histories = model.UserHistory.query.all()
+    result = list()
+    indexes = list()
+    for i in range(0, len(histories)):
+        indexOfRoom = -1
+        for k, j in enumerate(indexes):
+            if j == histories[i].room.title:
+               indexOfRoom = k
+        if(indexOfRoom >= 0):
+           result[indexOfRoom]["count"] = str(int(result[indexOfRoom]["count"]) + 1)
+        else:
+           indexes.extend([histories[i].room.title])
+           result.extend([{"text": histories[i].room.title, "count": "1"}])
+    return Response(json.dumps(result), mimetype='application/json')
 
 ##Actions
 @login_required
@@ -198,5 +219,12 @@ def get_static(remainder):
 
 app.secret_key = "Secret"
 
+
+## Example Logging 
+## app.logger.error("added: " + str(histories[i].room.title))
 if __name__ == "__main__":
+    handler = RotatingFileHandler('log.log', maxBytes=10000, backupCount=1)
+    handler.setLevel(logging.INFO)
+    app.logger.addHandler(handler)
+	
     app.run(host="0.0.0.0")
