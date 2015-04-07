@@ -1,5 +1,6 @@
 from cosmicac import db, create_user, model, create_room, create_userHistory
 
+db.drop_all()
 db.create_all()
 
 
