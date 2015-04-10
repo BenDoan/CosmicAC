@@ -157,7 +157,7 @@ def signout():
 def index():
     if current_user.is_anonymous():
         return redirect("/signin")
-    return render_template('index.html')
+    return render_template('index.html', rooms=model.Room.query.all())
 
 @login_required
 @app.route('/rooms', methods=['GET'])
@@ -228,6 +228,15 @@ def add_room():
         return redirect("/admin")
     else:
         abort("418")
+
+@login_required
+@app.route('/checkin', methods=['GET'])
+def checkin():
+    room = model.Room.query.filter_by(id=request.args.get('id')).first()
+    ci = model.UserHistory(current_user, room)
+    db.session.add(ci)
+    flash("Checked in to {}".format(room.title), "success")
+    return redirect("/")
 
 ##Misc
 @login_required
