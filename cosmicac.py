@@ -8,7 +8,7 @@ from htmlmin import minify
 from flask.ext.login import LoginManager,login_user,logout_user, current_user, login_required
 from flask_wtf import Form
 from wtforms import StringField, PasswordField, TextField, TextAreaField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, Required
 from passlib.hash import pbkdf2_sha256
 
 from model import Model
@@ -49,11 +49,11 @@ class SignupForm(Form):
     repeatpassword = PasswordField('repeatpassword', validators=[DataRequired()])
 
 class AddRoomForm(Form):
-    title = TextField('title', validators=[DataRequired()])
-    number = TextField('number', validators=[DataRequired()])
-    short_description = TextAreaField('short_description', validators=[DataRequired()])
-    long_description = TextAreaField('long_description', validators=[DataRequired()])
-    image = TextField('image', validators=[DataRequired()])
+    title = TextField('title', validators=[Required()])
+    number = TextField('number', validators=[Required()])
+    short_description = TextAreaField('short_description')
+    long_description = TextAreaField('long_description')
+    image = TextField('image')
 
 def create_user(username, email, password, is_admin=False):
     newuser = model.User(username, email, is_admin)
@@ -61,14 +61,14 @@ def create_user(username, email, password, is_admin=False):
     db.session.add(newuser)
     db.session.commit()
     return newuser
-	
+
 def create_room(name, number, shortDesc, longDesc, img):
     #Image will not be working yet
     newRoom = model.Room(name, number, shortDesc, longDesc, img)
     db.session.add(newRoom)
     db.session.commit()
     return newRoom
-	
+
 def create_userHistory(userName, roomName):
     users = model.User.query.filter_by(username=userName)
     user = users.first()
@@ -174,16 +174,16 @@ def profile():
 def admin():
     if current_user.is_admin:
         return render_template('admin.html', form=AddRoomForm())
-		
+
 @login_required
 @app.route('/stats', methods=['GET'])
 def stats():
-    users = model.UserHistory.query.all() 
+    users = model.UserHistory.query.all()
     list1 = [{"text": "Java", "count": "236"},{"text": ".Net", "count": "382"}]
     user = users[0]
     if current_user.is_admin:
         return render_template('stats.html')
-		
+
 @app.route('/_get_stats')
 def get_stats():
     histories = model.UserHistory.query.all()
@@ -210,6 +210,25 @@ def add_user():
         admin()
     #return render_template('admin.html', form=AddRoomForm())
 
+@login_required
+@app.route('/add/room', methods=['POST'])
+def add_room():
+    if current_user.is_admin:
+        form = AddRoomForm()
+        if not form.validate_on_submit():
+            for error in form.errors:
+                flash("Missing room {}".format(error), "danger")
+            return render_template("admin.html", form=form)
+
+        flash("Room added")
+        room = model.Room(form.title.data, form.number.data)
+        db.session.add(room)
+        db.session.commit()
+
+        return redirect("/admin")
+    else:
+        abort("418")
+
 ##Misc
 @login_required
 @app.route('/js/<remainder>',methods=['GET'])
@@ -220,11 +239,11 @@ def get_static(remainder):
 app.secret_key = "Secret"
 
 
-## Example Logging 
+## Example Logging
 ## app.logger.error("added: " + str(histories[i].room.title))
 if __name__ == "__main__":
     handler = RotatingFileHandler('log.log', maxBytes=10000, backupCount=1)
     handler.setLevel(logging.INFO)
     app.logger.addHandler(handler)
-	
+
     app.run(host="0.0.0.0")

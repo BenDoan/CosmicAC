@@ -2,7 +2,7 @@
 
 {% block navcontent %}
 This is an admin only page
-<form action="/signin" method="POST">
+<form action="/add/room" method="POST">
     <h2 class="form-signin-heading">Add Room</h2>
     <div class="row">
         <div class="form-group col-sm-7">
@@ -25,6 +25,7 @@ This is an admin only page
             {{ form.image(placeholder="Image",size=20,class="form-control") }}
         </div>
         <br/>
+        {{form.hidden_tag()}}
 
         <div class="form-group col-sm-7">
             <button type="submit" class="btn btn-primary btn-block">Submit</button>
