@@ -1,5 +1,20 @@
 {% extends "navbarbase.html" %}
 
 {% block navcontent %}
-{{ current_user }}
+<form action="/profile" method="POST">
+    <h2 class="form-signin-heading">Profile</h2>
+    <div class="row">
+        <div class="form-group col-sm-7">
+            Name {{ form.name(class="form-control",placeholder="Name", value=current_user.username) }}
+            New password {{ form.password(class="form-control") }}
+            Confirm password {{ form.confirm(class="form-control")}}
+        </div>
+        <br/>
+        {{form.hidden_tag()}}
+
+        <div class="form-group col-sm-7">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </div>
+</form>
 {% endblock %}

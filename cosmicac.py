@@ -8,7 +8,7 @@ from htmlmin import minify
 from flask.ext.login import LoginManager,login_user,logout_user, current_user, login_required
 from flask_wtf import Form
 from wtforms import StringField, PasswordField, TextField, TextAreaField
-from wtforms.validators import DataRequired, Required
+from wtforms import validators
 from passlib.hash import pbkdf2_sha256
 
 from model import Model
@@ -39,21 +39,28 @@ db = model.db
 
 ## Authentication
 class LoginForm(Form):
-    name = StringField('name', validators=[DataRequired()])
-    password = PasswordField('password', validators=[DataRequired()])
+    name = StringField('name', validators=[validators.DataRequired()])
+    password = PasswordField('password', validators=[validators.DataRequired()])
 
 class SignupForm(Form):
-    name = StringField('name', validators=[DataRequired()])
-    email = StringField('email', validators=[DataRequired()])
-    password = PasswordField('password', validators=[DataRequired()])
-    repeatpassword = PasswordField('repeatpassword', validators=[DataRequired()])
+    name = StringField('name', validators=[validators.DataRequired()])
+    email = StringField('email', validators=[validators.DataRequired()])
+    password = PasswordField('password', validators=[validators.DataRequired()])
+    repeatpassword = PasswordField('repeatpassword', validators=[validators.DataRequired()])
 
 class AddRoomForm(Form):
-    title = TextField('title', validators=[Required()])
-    number = TextField('number', validators=[Required()])
+    title = TextField('title', validators=[validators.Required()])
+    number = TextField('number', validators=[validators.Required()])
     short_description = TextAreaField('short_description')
     long_description = TextAreaField('long_description')
     image = TextField('image')
+
+class EditUserForm(Form):
+    name = TextField('name')
+    password = PasswordField('password', [
+       validators.EqualTo('confirm', message='Passwords must match')
+    ])
+    confirm = PasswordField('Repeat password')
 
 def create_user(username, email, password, is_admin=False):
     newuser = model.User(username, email, is_admin)
@@ -165,9 +172,21 @@ def rooms():
     return render_template('rooms.html')
 
 @login_required
-@app.route('/profile', methods=['GET'])
+@app.route('/profile', methods=['GET', 'POST'])
 def profile():
-    return render_template('profile.html')
+    if request.method == "POST":
+        form = EditUserForm()
+        if not form.validate_on_submit():
+            for error in form.errors:
+                flash("Error for {}".format(error), "danger")
+            return render_template("profile.html", form=form)
+
+        current_user.username = form.name.data
+        if form.password.data.strip() != "":
+            current_user.password = pbkdf2_sha256.encrypt(form.password.data)
+        db.session.commit()
+        flash("User updated", "success")
+    return render_template('profile.html', form=EditUserForm())
 
 @login_required
 @app.route('/admin', methods=['GET'])
@@ -235,6 +254,7 @@ def checkin():
     room = model.Room.query.filter_by(id=request.args.get('id')).first()
     ci = model.UserHistory(current_user, room)
     db.session.add(ci)
+    db.session.commit()
     flash("Checked in to {}".format(room.title), "success")
     return redirect("/")
 
