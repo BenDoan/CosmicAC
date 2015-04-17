@@ -294,7 +294,7 @@ def recievepicture():
             flash("Checked in!", "success")
             return redirect('/')
         else:
-            flash("Not checked in!", "warning")
+            flash("Invalid QR code", "danger")
             return redirect('/')
 
 ##Misc
