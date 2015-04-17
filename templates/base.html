@@ -10,38 +10,13 @@
         <link rel="icon" sizes="192x192" href="/static/img/icon.png">
         <link rel="icon" type="image/png" href="/static/img/icon.png">
 
-        {% assets "css_all" %}
-        <link rel="stylesheet" href="{{ ASSET_URL }}" media="all" type="text/css">
-        {% endassets %}
-		 <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600,200italic,600italic&subset=latin,vietnamese' rel='stylesheet' type='text/css'>
-<script src="{{ url_for("static", filename="js/vendor/jquery-1.11.2.min.js") }}"></script>
+            {% assets "css_all" %}
+                <link rel="stylesheet" href="{{ ASSET_URL }}" media="all" type="text/css">
+            {% endassets %}
+            <!-- <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600,200italic,600italic&subset=latin,vietnamese' rel='stylesheet' type='text/css'> -->
+            <script src="{{ url_for("static", filename="js/vendor/jquery-1.11.2.min.js") }}"></script>
             <script src="{{ url_for("static", filename="js/bootstrap.js") }}"></script>
             <script src="{{ url_for("static", filename="js/main.js") }}"></script>
-			<script src="{{ url_for("static", filename="js/d3.js") }}"></script>
-  <script src="http://phuonghuynh.github.io/js/bower_components/jquery/dist/jquery.min.js"></script>
-  <script src="http://phuonghuynh.github.io/js/bower_components/d3/d3.min.js"></script>
-  <script src="http://phuonghuynh.github.io/js/bower_components/d3-transform/src/d3-transform.js"></script>
-  <script src="http://phuonghuynh.github.io/js/bower_components/cafej/src/extarray.js"></script>
-  <script src="http://phuonghuynh.github.io/js/bower_components/cafej/src/misc.js"></script>
-  <script src="http://phuonghuynh.github.io/js/bower_components/cafej/src/micro-observer.js"></script>
-  <script src="http://phuonghuynh.github.io/js/bower_components/microplugin/src/microplugin.js"></script>
-  <script src="http://phuonghuynh.github.io/js/bower_components/bubble-chart/src/bubble-chart.js"></script>
-  <script src="http://phuonghuynh.github.io/js/bower_components/bubble-chart/src/plugins/central-click/central-click.js"></script>
-  <script src="http://phuonghuynh.github.io/js/bower_components/bubble-chart/src/plugins/lines/lines.js"></script>
-  <script src="{{ url_for("static", filename="js/bubble.js") }}"></script>
-  <script type=text/javascript>
-  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-</script>
-  <style>
-    .bubbleChart {
-      min-width: 100px;
-      max-width: 700px;
-      max-height: 700px;
-	  min-height: 100px;
-      margin: 0 auto;
-    }
-    
-  </style>
     </head>
     <body>
         <!--[if lt IE 8]>
@@ -55,7 +30,7 @@
             <hr>
             </div> <!-- /container -->
 
-            
-			
+
+
     </body>
 </html>

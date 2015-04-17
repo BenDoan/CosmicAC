@@ -1,6 +1,21 @@
 {% extends "navbarbase.html" %}
 
 {% block navcontent %}
+<script src="{{ url_for("static", filename="js/d3.js") }}"></script>
+<script src="http://phuonghuynh.github.io/js/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="http://phuonghuynh.github.io/js/bower_components/d3/d3.min.js"></script>
+<script src="http://phuonghuynh.github.io/js/bower_components/d3-transform/src/d3-transform.js"></script>
+<script src="http://phuonghuynh.github.io/js/bower_components/cafej/src/extarray.js"></script>
+<script src="http://phuonghuynh.github.io/js/bower_components/cafej/src/misc.js"></script>
+<script src="http://phuonghuynh.github.io/js/bower_components/cafej/src/micro-observer.js"></script>
+<script src="http://phuonghuynh.github.io/js/bower_components/microplugin/src/microplugin.js"></script>
+<script src="http://phuonghuynh.github.io/js/bower_components/bubble-chart/src/bubble-chart.js"></script>
+<script src="http://phuonghuynh.github.io/js/bower_components/bubble-chart/src/plugins/central-click/central-click.js"></script>
+<script src="http://phuonghuynh.github.io/js/bower_components/bubble-chart/src/plugins/lines/lines.js"></script>
+<script src="{{ url_for("static", filename="js/bubble.js") }}"></script>
+<script type=text/javascript>
+$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+</script>
 
 <h4> Number of visits per room </h4>
 <div class="bubbleChart"/>

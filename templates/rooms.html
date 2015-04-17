@@ -1,6 +1,19 @@
 {% extends "navbarbase.html" %}
 
 {% block navcontent %}
-listing of rooms
+<div class="container-fluid">
+    <div class="row">
+        {% for room in rooms %}
+            <span class="lab-tile col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                <ul>
+                    <li><h3><a href="/room/{{ room.id }}">{{ room.title|e }}</a></h3>
+                    <li>{{ room.number|e }}
+                    <li><span "lab-tile-desc">{{ room.short_description|e }}</span>
+                    <li><a class="btn btn-warning btn-xs" href="/checkin?id={{ room.id }}">Checkin</a>
+                </ul>
+            </span>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}
 

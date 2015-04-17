@@ -1,0 +1,11 @@
+{% extends "navbarbase.html" %}
+
+{% block navcontent %}
+<div class="container">
+    <div class="row">
+        <h2>{{ room.title|e }}</h2>
+        <p>Number: {{ room.number }}</p>
+        <p class="well">{{ room.long_description|e }}</p>
+    </div>
+</div>
+{% endblock %}

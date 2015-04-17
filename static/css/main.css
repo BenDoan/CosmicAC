@@ -7,20 +7,6 @@ nav.navbar .username {
     color: #ddd;
 }
 
-.modal-dialog {
-    width: 100% !important;
-    height: 100% !important;
-    padding: 0 !important;
-    margin: 0 !important;
-}
-
-.modal-content {
-    height:100%;
-    width: 100%;
-    border-radius: 0 !important;
-    padding-top:30%;
-    overflow: auto;
-}
 .form-signin {
     max-width: 300px;
     padding: 19px 29px 29px;
@@ -39,22 +25,26 @@ div.logincontainer {
     margin-top:40px;
 }
 
-.box {
-    /*width: 33.2%;*/
-    width:49.5%;
-    position:relative;
+span.lab-tile {
+    boder: 1px solid black;
 }
 
-.box label{
-    position: absolute;
-    left: -4px;
-    top: -3px;
+span.lab-tile ul {
+    list-style-type: none;
 }
 
-.box img {
-    width: 100.5%;
+span.lab-tile span.lab-tile-desc {
+    color: #333;
 }
 
-img.lichen {
-    width:10%;
+a.lab-header {
+    font-size: 20pt;
+}
+
+.bubbleChart {
+  min-width: 100px;
+  max-width: 700px;
+  max-height: 700px;
+  min-height: 100px;
+  margin: 0 auto;
 }

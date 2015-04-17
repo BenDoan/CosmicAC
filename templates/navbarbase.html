@@ -23,8 +23,8 @@
 				{% if current_user.is_admin %}<li {% if request.path.startswith("/stats") %}class="active"{% endif %}><a href="/stats">Statistics</a></li>{% endif %}
             </ul>
             <span class="navbar-right">
-                <p class="navbar-text">You are logged in as <strong><a href="/profile">{{ current_user.username }}</strong></a></p>
-                <a href="/signout" class="btn btn-default navbar-btn">Log out</a>
+                <p class="navbar-text">logged in as <strong><a href="/profile">{{ current_user.username }}</strong></a></p>
+                <a href="/signout" class="btn btn-default navbar-btn btn-xs">Log out</a>
             </span>
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->

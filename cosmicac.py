@@ -31,7 +31,7 @@ app.config['TRAP_BAD_REQUEST_ERRORS'] = True
 assets = Environment(app)
 assets.url_expire = False
 
-css = Bundle('css/main.css', 'css/bootstrap.css', 'css/bootstrap-theme.css', filters="cssmin", output='css/gen/packed.css')
+css = Bundle('css/bootstrap.css', 'css/main.css', filters="cssmin", output='css/gen/packed.css')
 assets.register('css_all', css)
 
 model = Model(app)
@@ -57,6 +57,7 @@ class AddRoomForm(Form):
 
 class EditUserForm(Form):
     name = TextField('name')
+    email = TextField('email')
     password = PasswordField('password', [
        validators.EqualTo('confirm', message='Passwords must match')
     ])
@@ -169,7 +170,8 @@ def index():
 @login_required
 @app.route('/rooms', methods=['GET'])
 def rooms():
-    return render_template('rooms.html')
+    all_rooms = model.Room.query.all()
+    return render_template('rooms.html', rooms=all_rooms)
 
 @login_required
 @app.route('/profile', methods=['GET', 'POST'])
@@ -182,6 +184,7 @@ def profile():
             return render_template("profile.html", form=form)
 
         current_user.username = form.name.data
+        current_user.email = form.email.data
         if form.password.data.strip() != "":
             current_user.password = pbkdf2_sha256.encrypt(form.password.data)
         db.session.commit()
@@ -220,6 +223,14 @@ def get_stats():
            result.extend([{"text": histories[i].room.title, "count": "1"}])
     return Response(json.dumps(result), mimetype='application/json')
 
+@login_required
+@app.route('/room/<room_id>', methods=['GET'])
+def room(room_id):
+    room = model.Room.query.filter_by(id=room_id).first()
+    if not room:
+        abort(404)
+    return render_template('room.html', room=room)
+
 ##Actions
 @login_required
 @app.route('/user/add', methods=['POST'])
@@ -239,8 +250,8 @@ def add_room():
                 flash("Missing room {}".format(error), "danger")
             return render_template("admin.html", form=form)
 
-        flash("Room added")
-        room = model.Room(form.title.data, form.number.data)
+        flash("Room added", "success")
+        room = model.Room(form.title.data, form.number.data, form.short_description.data, form.long_description.data)
         db.session.add(room)
         db.session.commit()
 
@@ -255,7 +266,7 @@ def checkin():
     ci = model.UserHistory(current_user, room)
     db.session.add(ci)
     db.session.commit()
-    flash("Checked in to {}".format(room.title), "success")
+    flash("Checked in to {}!".format(room.title), "success")
     return redirect("/")
 
 ##Misc
