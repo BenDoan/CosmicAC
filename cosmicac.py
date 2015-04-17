@@ -36,6 +36,8 @@ app.config['PROPAGATE_EXCEPTIONS'] = True
 app.config['TRAP_BAD_REQUEST_ERRORS'] = True
 
 UPLOAD_FOLDER = "/tmp/cosmicac-pics"
+if platform.system().startswith('Win'):
+	UPLOAD_FOLDER = "C:\\temp\\cosmicac-pics"
 
 assets = Environment(app)
 assets.url_expire = False
