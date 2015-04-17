@@ -16,3 +16,4 @@ jsmin==2.1.1
 passlib==1.6.2
 webassets==0.10.1
 wsgiref==0.1.2
+perform==0.0.8

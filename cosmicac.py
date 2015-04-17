@@ -11,9 +11,16 @@ from wtforms import StringField, PasswordField, TextField, TextAreaField
 from wtforms import validators
 from passlib.hash import pbkdf2_sha256
 
+try:
+    from perform import zbarimg
+except:
+    pass
+
 from model import Model
+
 import platform
 import json
+import os
 
 app = Flask(__name__)
 loginmanager = LoginManager()
@@ -27,6 +34,8 @@ else:
 app.config['DEBUG'] = True
 app.config['PROPAGATE_EXCEPTIONS'] = True
 app.config['TRAP_BAD_REQUEST_ERRORS'] = True
+
+UPLOAD_FOLDER = "/tmp/cosmicac-pics"
 
 assets = Environment(app)
 assets.url_expire = False
@@ -231,6 +240,11 @@ def room(room_id):
         abort(404)
     return render_template('room.html', room=room)
 
+@login_required
+@app.route('/takepicture', methods=['GET'])
+def takepicture():
+    return render_template('takepicture.html')
+
 ##Actions
 @login_required
 @app.route('/user/add', methods=['POST'])
@@ -269,10 +283,28 @@ def checkin():
     flash("Checked in to {}!".format(room.title), "success")
     return redirect("/")
 
-##Misc
 @login_required
-@app.route('/js/<remainder>',methods=['GET'])
-@app.route('/img/<remainder>',methods=['GET'])
+@app.route('/receivepicture', methods=['POST'])
+def recievepicture():
+    f = request.files['picture']
+    if f:
+        path = os.path.join(UPLOAD_FOLDER, f.filename)
+        f.save(path)
+        if verify_qr(path):
+            flash("Checked in!", "success")
+            return redirect('/')
+        else:
+            flash("Not checked in!", "warning")
+            return redirect('/')
+
+##Misc
+def verify_qr(path):
+    contents = zbarimg(path)
+    return "password" in contents
+
+@login_required
+@app.route('/js/<remainder>', methods=['GET'])
+@app.route('/img/<remainder>', methods=['GET'])
 def get_static(remainder):
     return send_from_directory(app.static_folder,request.path[1:])
 
