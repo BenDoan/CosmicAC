@@ -25,6 +25,8 @@ import os
 app = Flask(__name__)
 loginmanager = LoginManager()
 loginmanager.init_app(app)
+# https://flask-login.readthedocs.org/en/latest/
+loginmanager.login_view = '/signin'
 
 if platform.system().startswith('Win'):
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:\\temp\\cosmicac.db'
@@ -37,7 +39,7 @@ app.config['TRAP_BAD_REQUEST_ERRORS'] = True
 
 UPLOAD_FOLDER = "/tmp/cosmicac-pics"
 if platform.system().startswith('Win'):
-	UPLOAD_FOLDER = "C:\\temp\\cosmicac-pics"
+    UPLOAD_FOLDER = "C:\\temp\\cosmicac-pics"
 
 assets = Environment(app)
 assets.url_expire = False
@@ -100,7 +102,7 @@ def create_userHistory(userName, roomName):
 
 @loginmanager.user_loader
 def load_user(userid):
-    users =  model.User.query.filter_by(username=userid)
+    users = model.User.query.filter_by(username=userid)
     return users.first()
 
 @app.route('/authenticate', methods=['GET','POST'])
@@ -153,8 +155,8 @@ def signup():
             error = "passwords did not match"
     return render_template("signup.html",form = form,error=error)
 
-@login_required
 @app.route('/logout', methods=['GET'])
+@login_required
 def logout():
     logout_user()
     return redirect(request.args.get("redirect"))
@@ -164,28 +166,28 @@ def getuser():
     admin = model.User.query.filter_by(username='admin').first()
     return admin.username
 
-@login_required
 @app.route('/signout')
+@login_required
 def signout():
     logout_user()
     return redirect('/signin')
 
 ##Content
-@login_required
+# I think we shouldn't have @login_required here?
 @app.route('/', methods=['GET'])
 def index():
     if current_user.is_anonymous():
         return redirect("/signin")
     return render_template('index.html', rooms=model.Room.query.all())
 
-@login_required
 @app.route('/rooms', methods=['GET'])
+@login_required
 def rooms():
     all_rooms = model.Room.query.all()
     return render_template('rooms.html', rooms=all_rooms)
 
-@login_required
 @app.route('/profile', methods=['GET', 'POST'])
+@login_required
 def profile():
     if request.method == "POST":
         form = EditUserForm()
@@ -202,14 +204,16 @@ def profile():
         flash("User updated", "success")
     return render_template('profile.html', form=EditUserForm())
 
-@login_required
 @app.route('/admin', methods=['GET'])
+@login_required
 def admin():
     if current_user.is_admin:
         return render_template('admin.html', form=AddRoomForm())
+    # If the user isn't an admin, return them to /
+    return redirect("/")
 
-@login_required
 @app.route('/stats', methods=['GET'])
+@login_required
 def stats():
     users = model.UserHistory.query.all()
     list1 = [{"text": "Java", "count": "236"},{"text": ".Net", "count": "382"}]
@@ -234,30 +238,30 @@ def get_stats():
            result.extend([{"text": histories[i].room.title, "count": "1"}])
     return Response(json.dumps(result), mimetype='application/json')
 
-@login_required
 @app.route('/room/<room_id>', methods=['GET'])
+@login_required
 def room(room_id):
     room = model.Room.query.filter_by(id=room_id).first()
     if not room:
         abort(404)
     return render_template('room.html', room=room)
 
-@login_required
 @app.route('/takepicture', methods=['GET'])
+@login_required
 def takepicture():
     return render_template('takepicture.html')
 
 ##Actions
-@login_required
 @app.route('/user/add', methods=['POST'])
+@login_required
 def add_user():
     if current_user.is_admin:
         print request.form
         admin()
     #return render_template('admin.html', form=AddRoomForm())
 
-@login_required
 @app.route('/add/room', methods=['POST'])
+@login_required
 def add_room():
     if current_user.is_admin:
         form = AddRoomForm()
@@ -275,18 +279,36 @@ def add_room():
     else:
         abort("418")
 
-@login_required
+# Hybrid QR-codes could go to this view. A QR code might contain:
+# flainted.com:3000/checkin?id=1
+# A user could scan this with their QR code reader, or with our app (which could parse for the id parameter).
 @app.route('/checkin', methods=['GET'])
 def checkin():
-    room = model.Room.query.filter_by(id=request.args.get('id')).first()
+    # If the user is anonymous (meaning not logged-in), then this is probably a first-time user.
+    # Display a helpful message about our web application and how they can get started. 
+    if current_user.is_anonymous():
+        flash("Howdy, and welcome to CosmicAC! You can use this web app to scan the " +
+              "QR codes lying around and get cool information about each room! " +
+              "First, log in or make an account.", "info")
+        return redirect("/signin")
+
+    roomId = request.args.get('id')
+
+    # Redirect to / if no id parameter was specified
+    if roomId is None:
+        return redirect("/")
+
+    room = model.Room.query.filter_by(id=roomId).first()
+
     ci = model.UserHistory(current_user, room)
     db.session.add(ci)
     db.session.commit()
     flash("Checked in to {}!".format(room.title), "success")
-    return redirect("/")
 
-@login_required
+    return redirect("/room/" + roomId)
+
 @app.route('/receivepicture', methods=['POST'])
+@login_required
 def recievepicture():
     f = request.files['picture']
     if f:
@@ -304,9 +326,9 @@ def verify_qr(path):
     contents = zbarimg(path)
     return "password" in contents
 
-@login_required
 @app.route('/js/<remainder>', methods=['GET'])
 @app.route('/img/<remainder>', methods=['GET'])
+@login_required
 def get_static(remainder):
     return send_from_directory(app.static_folder,request.path[1:])
 
