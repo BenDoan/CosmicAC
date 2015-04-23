@@ -4,17 +4,23 @@
 <form action="/profile" method="POST">
     <h2 class="form-signin-heading">Profile</h2>
     <div class="row">
-        <div class="form-group col-sm-7">
-            Name {{ form.name(class="form-control", placeholder="Name", value=current_user.username) }}
-            Email {{ form.email(class="form-control", placeholder="Name", value=current_user.email) }}
-            New password {{ form.password(class="form-control") }}
-            Confirm password {{ form.confirm(class="form-control")}}
+        <div style="PADDING-LEFT:5px;PADDING-RIGHT:5px;PADDING-TOP:5px;PADDING-BOTTOM:5px;" class="input-group input-group-sm"><span class="input-group-addon" id="sizing-addon1"><center><img src="../static/img/glyphicons-4-user.png" width="16" height="16"></center></span>
+            {{ form.name(class="form-control", placeholder="Name", value=current_user.username) }}
+        </div>
+        <div style="PADDING-LEFT:5px;PADDING-RIGHT:5px;PADDING-TOP:5px;PADDING-BOTTOM:5px;" class="input-group input-group-sm"><span class="input-group-addon" id="sizing-addon1"><center><img src="../static/img/glyphicons-11-envelope.png" width="16" height="12"></center></span>
+            {{ form.email(class="form-control", placeholder="Name", value=current_user.email) }}
+        </div>
+        <div style="PADDING-LEFT:5px;PADDING-RIGHT:5px;PADDING-TOP:5px;PADDING-BOTTOM:5px;" class="input-group input-group-sm"><span class="input-group-addon" id="sizing-addon1"><center><img src="../static/img/glyphicons-204-lock.png" width="16" height="16"></center></span>
+            {{ form.password(class="form-control", placeholder="New password") }}
+        </div>
+        <div style="PADDING-LEFT:5px;PADDING-RIGHT:5px;PADDING-TOP:5px;PADDING-BOTTOM:5px;" class="input-group input-group-sm"><span class="input-group-addon" id="sizing-addon1"><center><img src="../static/img/glyphicons-204-lock.png" width="16" height="16"></center></span>
+            {{ form.confirm(class="form-control", placeholder="Confirm new password") }}
         </div>
         <br/>
         {{form.hidden_tag()}}
 
         <div class="form-group col-sm-7">
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary">Update profile</button>
         </div>
     </div>
 </form>
