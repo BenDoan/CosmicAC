@@ -2,7 +2,7 @@
 {% block content %}
 <div class="logincontainer">
 <form action="/signup" method="POST" class="form-signin">
-    <h2 class="form-signin-heading">Sign Up</h2>
+     <center><img style="PADDING-LEFT:10px;PADDING-RIGHT:10px;PADDING-BOTTOM:25px;" src="../static/img/pkilogo.png" alt="PKI Open House"></center>
     {% if error != "" %}
         <div class="alert alert-danger" role="alert">
             {{ error }}
@@ -10,15 +10,22 @@
     {% endif %}
     <input type="hidden" name="redirect" value="/"/>
     {{ form.csrf_token }}
-    {{ form.name(size=20,class="form-control",placeholder="username") }}
-    {{ form.email(size=20,class="form-control",placeholder="email") }}
+    <div style="PADDING-BOTTOM:10px;" class="input-group input-group-sm"><span class="input-group-addon" id="sizing-addon1"><img src="../static/img/glyphicons-4-user.png" width="16" height="16"></center></span>
+        {{ form.name(size=20,class="form-control",placeholder="Enter your desired username") }}
+    </div>
+    <div style="PADDING-BOTTOM:10px;" class="input-group input-group-sm"><span class="input-group-addon" id="sizing-addon1"><img src="../static/img/glyphicons-11-envelope.png" width="16" height="12"></center></span>
+        {{ form.email(size=20,class="form-control",placeholder="Enter your e-mail") }}
+    </div>
     <br/>
-    {{ form.password(placeholder="password",size=20,class="form-control") }}
-    {{ form.repeatpassword(placeholder="retype password",size=20,class="form-control") }}
+    <div style="PADDING-BOTTOM:10px;" class="input-group input-group-sm"><span class="input-group-addon" id="sizing-addon1"><img src="../static/img/glyphicons-204-lock.png" width="16" height="16"></center></span>
+        {{ form.password(placeholder="Create a password",size=20,class="form-control") }}
+    </div>
+    <div style="PADDING-BOTTOM:10px;" class="input-group input-group-sm"><span class="input-group-addon" id="sizing-addon1"><img src="../static/img/glyphicons-204-lock.png" width="16" height="16"></center></span>
+        {{ form.repeatpassword(placeholder="Reenter your password",size=20,class="form-control") }}
+    </div>
     <br/>
-    <button type="submit" class="btn btn-primary btn-block">Create Account</button>
-    <br/>
-    <a href="/signin" class="btn btn-success btn-block">Or Sign in</a>
+    <button type="submit" class="btn btn-info btn-block">Create account</button>
+    <a href="/signin" class="btn btn-info btn-block">Return to sign in page</a>
 </form>
 </div>
 {% endblock %}
