@@ -90,12 +90,12 @@ def create_room(name, number, shortDesc, longDesc, img):
     db.session.commit()
     return newRoom
 
-def create_userHistory(userName, roomName, time):
+def create_userHistory(userName, roomName):
     users = model.User.query.filter_by(username=userName)
     user = users.first()
     rooms = model.Room.query.filter_by(title=roomName)
     room = rooms.first()
-    newhistory = model.UserHistory(user, room, time)
+    newhistory = model.UserHistory(user, room)
     db.session.add(newhistory)
     db.session.commit()
     return newhistory
@@ -253,8 +253,11 @@ def get_time_stats():
     result[1].extend([30])
     result[0].extend(['05 06'])
     result[1].extend([20])
+    listOfTimes = list()
+    
     for i in range(0, len(histories)):
-        day, hour = histories[i].time.split()
+       listOfTimes.append(histories[i].time)
+       """ day, hour = histories[i].time.split()
         month, day = day.split('/')
         hour, minute = hour.split(':')
         if int(day) < firstTimeDay and int(hour) < firstTimeHour:
@@ -262,7 +265,8 @@ def get_time_stats():
             firstTimeHour = int(hour)
         if int(day) > LastTimeDay and int(hour) < LastTimeHour:
             LastTimeDay = int(day)
-            LastTimeHour = int(hour)
+            LastTimeHour = int(hour)"""
+    listOfTimes.sort()
     
     return Response(json.dumps(result), mimetype="application/json")
 
@@ -313,7 +317,7 @@ def add_room():
 @app.route('/checkin', methods=['GET'])
 def checkin():
     # If the user is anonymous (meaning not logged-in), then this is probably a first-time user.
-    # Display a helpful message about our web application and how they can get started.
+    # Display a helpful message about our web application and how they can get started. 
     if current_user.is_anonymous():
         flash("Howdy, and welcome to CosmicAC! You can use this web app to scan the " +
               "QR codes lying around and get cool information about each room! " +
@@ -332,6 +336,7 @@ def checkin():
     db.session.add(ci)
     db.session.commit()
     flash("Checked in to {}!".format(room.title), "success")
+
     return redirect("/room/" + roomId)
 
 @app.route('/receivepicture', methods=['POST'])
