@@ -1,4 +1,5 @@
 from flask.ext.sqlalchemy import SQLAlchemy
+import datetime
 
 class Model():
     def __init__(self, app):
@@ -24,7 +25,7 @@ class Model():
 
             def __str__(self):
 				return "Room: {}".format((self.id, self.title, self.number, self.short_description, self.long_description))
-				
+
             def get_id_num(self):
 			    return self.id
 
@@ -59,15 +60,16 @@ class Model():
                 return False
 
             def get_id(self) :
-				return self.username
-			
+                return self.username
+
             def get_id_num(self):
-			    return self.id
+                return self.id
 
         class UserHistory(self.db.Model):
             __tablename__ = 'user_history'
 
             id = db.Column(db.Integer, primary_key=True)
+            time = db.Column(db.DateTime, default=datetime.datetime.utcnow())
 
             user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
             user = db.relationship('User', backref=db.backref('UserHistory', lazy='dynamic'))
