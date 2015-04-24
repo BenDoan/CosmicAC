@@ -285,7 +285,7 @@ def add_room():
 @app.route('/checkin', methods=['GET'])
 def checkin():
     # If the user is anonymous (meaning not logged-in), then this is probably a first-time user.
-    # Display a helpful message about our web application and how they can get started. 
+    # Display a helpful message about our web application and how they can get started.
     if current_user.is_anonymous():
         flash("Howdy, and welcome to CosmicAC! You can use this web app to scan the " +
               "QR codes lying around and get cool information about each room! " +
@@ -304,7 +304,6 @@ def checkin():
     db.session.add(ci)
     db.session.commit()
     flash("Checked in to {}!".format(room.title), "success")
-
     return redirect("/room/" + roomId)
 
 @app.route('/receivepicture', methods=['POST'])
