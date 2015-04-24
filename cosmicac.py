@@ -90,12 +90,12 @@ def create_room(name, number, shortDesc, longDesc, img):
     db.session.commit()
     return newRoom
 
-def create_userHistory(userName, roomName):
+def create_userHistory(userName, roomName, time):
     users = model.User.query.filter_by(username=userName)
     user = users.first()
     rooms = model.Room.query.filter_by(title=roomName)
     room = rooms.first()
-    newhistory = model.UserHistory(user, room)
+    newhistory = model.UserHistory(user, room, time)
     db.session.add(newhistory)
     db.session.commit()
     return newhistory
@@ -237,6 +237,34 @@ def get_stats():
            indexes.extend([histories[i].room.title])
            result.extend([{"text": histories[i].room.title, "count": "1"}])
     return Response(json.dumps(result), mimetype='application/json')
+
+@app.route('/_get_time_stats')
+def get_time_stats():
+    histories = model.UserHistory.query.all()
+    result = list()
+    indexes = list()
+    firstTimeDay = 32
+    firstTimeHour = 25
+    LastTimeDay = 0
+    LastTimeHour = 0
+    result.extend([['x']])
+    result.extend([['number of visits over time']])
+    result[0].extend(['05 05'])
+    result[1].extend([30])
+    result[0].extend(['05 06'])
+    result[1].extend([20])
+    for i in range(0, len(histories)):
+        day, hour = histories[i].time.split()
+        month, day = day.split('/')
+        hour, minute = hour.split(':')
+        if int(day) < firstTimeDay and int(hour) < firstTimeHour:
+            firstTimeDay = int(day)
+            firstTimeHour = int(hour)
+        if int(day) > LastTimeDay and int(hour) < LastTimeHour:
+            LastTimeDay = int(day)
+            LastTimeHour = int(hour)
+    
+    return Response(json.dumps(result), mimetype="application/json")
 
 @app.route('/room/<room_id>', methods=['GET'])
 @login_required
