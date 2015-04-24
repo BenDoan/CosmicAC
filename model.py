@@ -1,5 +1,7 @@
 from flask.ext.sqlalchemy import SQLAlchemy
 import datetime
+import calendar
+from datetime import datetime, timedelta
 
 class Model():
     def __init__(self, app):
@@ -69,7 +71,7 @@ class Model():
             __tablename__ = 'user_history'
 
             id = db.Column(db.Integer, primary_key=True)
-            time = db.Column(db.DateTime, default=datetime.datetime.utcnow())
+            time = db.Column(db.DateTime, default=datetime.utcnow())
 
             user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
             user = db.relationship('User', backref=db.backref('UserHistory', lazy='dynamic'))
@@ -80,6 +82,14 @@ class Model():
             def __init__(self, user, room):
                 self.user = user
                 self.room = room
+
+            def get_local_time(self):
+                def utc_to_local(utc_dt):
+                    # get integer timestamp to avoid precision lost
+                    timestamp = calendar.timegm(utc_dt.timetuple())
+                    local_dt = datetime.fromtimestamp(timestamp)
+                    return local_dt.replace(microsecond=utc_dt.microsecond)
+                return utc_to_local(self.time)
 
         self.User = User
         self.UserHistory = UserHistory
