@@ -256,7 +256,7 @@ def get_time_stats():
     listOfTimes = list()
     
     for i in range(0, len(histories)):
-       listOfTimes.append(histories[i].time)
+       listOfTimes.append(histories[i].get_local_time())
        """ day, hour = histories[i].time.split()
         month, day = day.split('/')
         hour, minute = hour.split(':')
@@ -267,8 +267,10 @@ def get_time_stats():
             LastTimeDay = int(day)
             LastTimeHour = int(hour)"""
     listOfTimes.sort()
-    
-    return Response(json.dumps(result), mimetype="application/json")
+    listOfHours = list()
+    for i in range(0, len(listOfTimes)):
+        listOfHours.append(str(listOfTimes[i]))
+    return Response(json.dumps(listOfHours), mimetype="application/json")
 
 @app.route('/room/<room_id>', methods=['GET'])
 @login_required

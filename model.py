@@ -71,7 +71,7 @@ class Model():
             __tablename__ = 'user_history'
 
             id = db.Column(db.Integer, primary_key=True)
-            time = db.Column(db.DateTime, default=datetime.datetime.utcnow())
+            time = db.Column(db.DateTime, default=datetime.utcnow())
 
             user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
             user = db.relationship('User', backref=db.backref('UserHistory', lazy='dynamic'))
@@ -83,7 +83,7 @@ class Model():
                 self.user = user
                 self.room = room
 
-            def get_local_time():
+            def get_local_time(self):
                 def utc_to_local(utc_dt):
                     # get integer timestamp to avoid precision lost
                     timestamp = calendar.timegm(utc_dt.timetuple())
