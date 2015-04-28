@@ -248,29 +248,39 @@ def get_time_stats():
     LastTimeDay = 0
     LastTimeHour = 0
     result.extend([['x']])
-    result.extend([['number of visits over time']])
-    result[0].extend(['05 05'])
-    result[1].extend([30])
-    result[0].extend(['05 06'])
-    result[1].extend([20])
+    result.extend([['number of visits over time (day hour)']])
     listOfTimes = list()
-    
+    listOfHours = list()
     for i in range(0, len(histories)):
        listOfTimes.append(histories[i].get_local_time())
-       """ day, hour = histories[i].time.split()
-        month, day = day.split('/')
-        hour, minute = hour.split(':')
-        if int(day) < firstTimeDay and int(hour) < firstTimeHour:
-            firstTimeDay = int(day)
-            firstTimeHour = int(hour)
-        if int(day) > LastTimeDay and int(hour) < LastTimeHour:
-            LastTimeDay = int(day)
-            LastTimeHour = int(hour)"""
     listOfTimes.sort()
-    listOfHours = list()
-    for i in range(0, len(listOfTimes)):
-        listOfHours.append(str(listOfTimes[i]))
-    return Response(json.dumps(listOfHours), mimetype="application/json")
+    minTime = listOfTimes[0]
+    maxTime = listOfTimes[-1]
+    delta = maxTime - minTime
+    numHoursBetween = delta.days * 24
+    numHoursBetween += delta.seconds / 3600
+    if delta.seconds % 3600 != 0:
+        numHoursBetween += 1
+    currentDay = minTime.day
+    currentHour = minTime.hour
+    
+    for i in range (0, numHoursBetween + 1):
+        if (str(currentDay) +" " + str(currentHour)) not in result[0]:
+            result[0].extend([str(currentDay) +" " + str(currentHour)])
+            result[1].extend([0])
+        currentHour +=1
+        if currentHour > 23:
+            currentDay += 1
+            currentHour = 0
+    for i in range(0, len(histories)):
+        index = -1
+        for j in range(0, len(result[0])):
+            if str(result[0][j][:2]) == str(histories[i].get_local_time().day) and str(result[0][j][-2:]) == str(histories[i].get_local_time().hour):
+                index = j
+                break
+        if index != -1:
+            result[1][index] = int(result[1][index]) + 1
+    return Response(json.dumps(result), mimetype="application/json")
 
 @app.route('/room/<room_id>', methods=['GET'])
 @login_required
