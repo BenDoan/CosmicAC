@@ -1,7 +1,18 @@
+@font-face {
+    font-family: keepCalm;
+    src: url('/static/css/fonts/KeepCalm-Medium.ttf')
+}
+
+@font-face {
+    font-family: gravitybook;
+    src: url('/static/css/fonts/gravitybook.ttf')
+}
+
 body {
     padding-top: 20px;
     padding-bottom: 20px;
     background-image: url('/static/img/congruent_outline.png');
+    font-family: gravitybook;
 }
 
 nav.navbar .username {
@@ -64,4 +75,12 @@ div.room {
 
 div.room img {
     max-width:90%;
+}
+
+a.navbar-brand {
+    font-family: keepCalm;
+}
+
+div.admin {
+    font-family: sans;
 }
