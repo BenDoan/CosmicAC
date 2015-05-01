@@ -409,7 +409,9 @@ def takepicture():
     return render_template('takepicture.html')
 
 # Hybrid QR-codes could go to this view. A QR code might contain:
-# flainted.com:3000/checkin?id=1
+# flainted.com:3000/checkin?id=Room1
+# or
+# http://127.0.0.1:5000/checkin?id=Room1
 # A user could scan this with their QR code reader, or with our app (which could parse for the id parameter).
 @app.route('/checkin', methods=['GET'])
 def checkin():
@@ -422,7 +424,7 @@ def checkin():
         return redirect("/signin")
 
     roomId = request.args.get('id')
-    
+
     # Get just the ID
     roomId = roomId.split("Room")[-1]
 
