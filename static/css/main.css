@@ -53,3 +53,15 @@ a.lab-header {
   min-height: 100px;
   margin: 0 auto;
 }
+
+.lab-thumb {
+    width: 100px;
+}
+
+div.room {
+    margin:20px;
+}
+
+div.room img {
+    max-width:90%;
+}

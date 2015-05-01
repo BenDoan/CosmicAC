@@ -1,18 +1,12 @@
 {% extends "navbarbase.html" %}
 {% block navcontent %}
 <div class="jumbotron">
-    <div class="container">
+    <div class="row">
         <form action="/receivepicture" method="post" enctype="multipart/form-data">
             <input class="btn btn-default" type="file" accept="image/*" name="picture" capture="camera">
             <br>
             <input class="btn btn-primary" type="submit" value="Verify">
         </form>
-    </div>
-</div>
-
-<div class="container">
-    <!-- Example row of columns -->
-    <div class="row">
     </div>
 </div>
 {% endblock %}

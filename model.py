@@ -28,6 +28,7 @@ class Model():
                 self.short_description = short_description
                 self.long_description = long_description
                 self.image = image
+                self.image = "/static/img/lab.jpg"
 
             def __str__(self):
                 return "Room: {}".format((self.id, self.title, self.number, self.short_description, self.long_description))

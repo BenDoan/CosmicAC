@@ -1,9 +1,12 @@
 {% extends "navbarbase.html" %}
 
 {% block navcontent %}
-<div class="row">
+<div class="row room">
     <h2>{{ room.title|e }}</h2>
     <p>Room number: {{ room.number }}</p>
+    <img class="img-responsive" src="{{ room.image }}" alt="">
+    <br>
+    <br>
     <div class="well">
         <p>{{ room.get_markdown_long_desc()|e }}</p>
     </div>
