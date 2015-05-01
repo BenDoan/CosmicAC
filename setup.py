@@ -92,6 +92,39 @@ The laboratory features state-of-the-art equipment for conducting research in ro
 """
 create_room( 'C-MANTIC Lab', 'PKI 369', 'C-MANTIC Robotics Lab', long_desc4, 'lab4.jpg')
 
+long_desc5 = """
+We are the Widgets Rule club
+=================
+
+## What the Widgets Rule club researches
+
+We research widges of all kinds! Small ones, big ones, and ones that your momma eats for breakfast
+
+## What our favorite widgets are
+
+Our favorite kind of widgets include chocolate, basketball, and linoleum. These widgets zap packets faster than brown bagged semicolons.
+We would love for you to join our widget zapping club!
+
+"""
+create_room( 'Widgets club', 'PKI 200', 'Widgets Rule Lab', long_desc5, 'lab4.jpg')
+
+long_desc6 = """
+We are the PKI Robotics Lab
+=================
+
+## Where the RC^2 Robotics Lab meets
+
+We meet in the RC^2 Robotics Lab (PKI313), which is on the third floor of the Peter Kiewit Institute (1110 S 67th St, Omaha, NE 68182).
+
+## What PKI Robotics does
+
+Our robotics club is interested in providing students with experiences and opportunities that enhance their understanding of and skill set in robotics through participating in fun, yet challenging, robotics competitions.
+
+This year, we are focusing on the CREATE Open challenge. The 2014 CREATE Open game is similar to VEX Skyrise, but includes some differences in rules, including the allowance of non-VEX building materials and control systems in the robot.
+
+"""
+create_room( 'PKI Lab', 'PKI 313', 'PKI Robotics Lab', long_desc6, 'lab2.jpg')
+
 create_user('admin', 'admin@example.com', 'password', is_admin=True)
 create_user('user', 'user@example.com', 'password', is_admin=False)
 create_user('user1', 'user1@example.com', 'password', is_admin=False)
