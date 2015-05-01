@@ -10,11 +10,11 @@
     {% endif %}
     <input type="hidden" name="redirect" value="/"/>
     {{ form.csrf_token }}
-    <div style="PADDING-BOTTOM:10px;" class="input-group input-group-sm"><span class="input-group-addon" id="sizing-addon1"><img src="../static/img/glyphicons-4-user.png" width="16" height="16"></center></span>
-        {{ form.name(size=20,class="form-control",placeholder="Enter your desired username") }}
-    </div>
     <div style="PADDING-BOTTOM:10px;" class="input-group input-group-sm"><span class="input-group-addon" id="sizing-addon1"><img src="../static/img/glyphicons-11-envelope.png" width="16" height="12"></center></span>
         {{ form.email(size=20,class="form-control",placeholder="Enter your e-mail") }}
+    </div>
+    <div style="PADDING-BOTTOM:10px;" class="input-group input-group-sm"><span class="input-group-addon" id="sizing-addon1"><img src="../static/img/glyphicons-4-user.png" width="16" height="16"></center></span>
+        {{ form.name(size=20,class="form-control",placeholder="Enter your full name") }}
     </div>
     <br/>
     <div style="PADDING-BOTTOM:10px;" class="input-group input-group-sm"><span class="input-group-addon" id="sizing-addon1"><img src="../static/img/glyphicons-204-lock.png" width="16" height="16"></center></span>
