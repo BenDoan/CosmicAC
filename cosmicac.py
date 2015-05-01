@@ -11,7 +11,7 @@ from wtforms import validators
 from passlib.hash import pbkdf2_sha256
 
 import markdown
-
+import logging
 try:
     from perform import zbarimg
 except:
@@ -20,7 +20,7 @@ except:
 from model import Model
 
 import json
-import logging
+
 import os
 import platform
 
@@ -388,7 +388,7 @@ def get_time_stats():
     for i in range(0, len(histories)):
         index = -1
         for j in range(0, len(result[0])):
-            if str(result[0][j][:2]) == str(histories[i].get_local_time().day) and str(result[0][j][-2:]) == str(histories[i].get_local_time().hour):
+            if str(result[0][j][:2]).strip() == str(histories[i].get_local_time().day).strip() and str(result[0][j][-2:]).strip() == str(histories[i].get_local_time().hour).strip():
                 index = j
                 break
         if index != -1:
