@@ -1,6 +1,8 @@
 # CosmicAC
 Web application for guiding prospective students through the PKI open house.
 
+![screenshot](screenshot.png "Screenshot")
+
 ## setup
 ```bash
 # Install virtualenv (https://virtualenv.pypa.io/en/latest/installation.html)
