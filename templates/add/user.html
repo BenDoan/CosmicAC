@@ -1,0 +1,28 @@
+{% extends "navbarbase.html" %}
+
+{% block navcontent %}
+<form action="/user/add" method="POST">
+    <h2 class="form-signin-heading">Add user</h2>
+    <div class="row">
+        <div class="input-group input-group-sm">
+            {{ form.name(class="form-control", placeholder="Name") }}
+        </div>
+        <div class="input-group input-group-sm">
+            {{ form.email(class="form-control", placeholder="Email") }}
+        </div>
+        <div class="input-group input-group-sm">
+            {{ form.password(class="form-control", placeholder="New password") }}
+        </div>
+        <div class="input-group input-group-sm">
+            {{ form.confirm(class="form-control", placeholder="Confirm new password") }}
+        </div>
+        <br/>
+        {{form.hidden_tag()}}
+
+        <div class="form-group col-sm-7">
+            <button type="submit" class="btn btn-primary">Add</button>
+        </div>
+    </div>
+</form>
+{% endblock %}
+

@@ -5,7 +5,7 @@
     <h2 class="form-signin-heading">Profile</h2>
     <div class="row">
         <div style="PADDING-LEFT:5px;PADDING-RIGHT:5px;PADDING-TOP:5px;PADDING-BOTTOM:5px;" class="input-group input-group-sm"><span class="input-group-addon" id="sizing-addon1"><center><img src="../static/img/glyphicons-4-user.png" width="16" height="16"></center></span>
-            {{ form.name(class="form-control", placeholder="Name", value=current_user.username) }}
+            {{ form.name(class="form-control", placeholder="Name", value=current_user.name) }}
         </div>
         <div style="PADDING-LEFT:5px;PADDING-RIGHT:5px;PADDING-TOP:5px;PADDING-BOTTOM:5px;" class="input-group input-group-sm"><span class="input-group-addon" id="sizing-addon1"><center><img src="../static/img/glyphicons-11-envelope.png" width="16" height="12"></center></span>
             {{ form.email(class="form-control", placeholder="Name", value=current_user.email) }}

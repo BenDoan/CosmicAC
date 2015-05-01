@@ -1,6 +1,10 @@
 from flask.ext.sqlalchemy import SQLAlchemy
-import datetime
+from flask import Markup
+
+import markdown
+
 import calendar
+
 from datetime import datetime, timedelta
 
 class Model():
@@ -26,10 +30,13 @@ class Model():
                 self.image = image
 
             def __str__(self):
-				return "Room: {}".format((self.id, self.title, self.number, self.short_description, self.long_description))
+                return "Room: {}".format((self.id, self.title, self.number, self.short_description, self.long_description))
 
             def get_id_num(self):
-			    return self.id
+                return self.id
+
+            def get_markdown_long_desc(self):
+                return Markup(markdown.markdown(self.long_description))
 
         self.Room = Room
 
@@ -37,20 +44,20 @@ class Model():
             __tablename__ = 'users'
 
             id = db.Column(db.Integer, primary_key=True)
-            username = db.Column(db.String(80), unique=True)
+            name = db.Column(db.String(80), unique=True)
             email = db.Column(db.String(120), unique=True)
             password = db.Column(db.String)
             authenticated = db.Column(db.Boolean())
             is_admin = db.Column(db.Boolean())
 
-            def __init__(self, username, email, is_admin=False):
-                self.username = username
+            def __init__(self, name, email, is_admin=False):
+                self.name = name
                 self.email = email
                 self.authenticated = False
                 self.is_admin = is_admin
 
             def __str__(self):
-                return "User: {}".format((self.id, self.username, self.email, self.password, self.authenticated, self.is_admin))
+                return "User: {}".format((self.id, self.name, self.email, self.password, self.authenticated, self.is_admin))
 
             def is_authenticated(self) :
                 return self.authenticated
@@ -62,7 +69,7 @@ class Model():
                 return False
 
             def get_id(self) :
-                return self.username
+                return self.email
 
             def get_id_num(self):
                 return self.id

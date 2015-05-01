@@ -1,5 +1,4 @@
 from flask import *
-import logging
 from logging.handlers import RotatingFileHandler
 
 from flask.ext.sqlalchemy import SQLAlchemy
@@ -11,16 +10,19 @@ from wtforms import StringField, PasswordField, TextField, TextAreaField
 from wtforms import validators
 from passlib.hash import pbkdf2_sha256
 
+import markdown
+
 try:
     from perform import zbarimg
 except:
-    pass
+    logging.critical("Couldn't import zbarimg")
 
 from model import Model
 
-import platform
 import json
+import logging
 import os
+import platform
 
 app = Flask(__name__)
 loginmanager = LoginManager()
@@ -52,7 +54,7 @@ db = model.db
 
 ## Authentication
 class LoginForm(Form):
-    name = StringField('name', validators=[validators.DataRequired()])
+    email = StringField('email', validators=[validators.DataRequired()])
     password = PasswordField('password', validators=[validators.DataRequired()])
 
 class SignupForm(Form):
@@ -61,10 +63,10 @@ class SignupForm(Form):
     password = PasswordField('password', validators=[validators.DataRequired()])
     repeatpassword = PasswordField('repeatpassword', validators=[validators.DataRequired()])
 
-class AddRoomForm(Form):
+class EditRoomForm(Form):
     title = TextField('title', validators=[validators.Required()])
     number = TextField('number', validators=[validators.Required()])
-    short_description = TextAreaField('short_description')
+    short_description = TextField('short_description')
     long_description = TextAreaField('long_description')
     image = TextField('image')
 
@@ -76,8 +78,8 @@ class EditUserForm(Form):
     ])
     confirm = PasswordField('Repeat password')
 
-def create_user(username, email, password, is_admin=False):
-    newuser = model.User(username, email, is_admin)
+def create_user(name, email, password, is_admin=False):
+    newuser = model.User(name, email, is_admin)
     newuser.password = pbkdf2_sha256.encrypt(password)
     db.session.add(newuser)
     db.session.commit()
@@ -90,8 +92,8 @@ def create_room(name, number, shortDesc, longDesc, img):
     db.session.commit()
     return newRoom
 
-def create_userHistory(userName, roomName):
-    users = model.User.query.filter_by(username=userName)
+def create_userHistory(name, roomName):
+    users = model.User.query.filter_by(name=name)
     user = users.first()
     rooms = model.Room.query.filter_by(title=roomName)
     room = rooms.first()
@@ -101,8 +103,8 @@ def create_userHistory(userName, roomName):
     return newhistory
 
 @loginmanager.user_loader
-def load_user(userid):
-    users = model.User.query.filter_by(username=userid)
+def load_user(email):
+    users = model.User.query.filter_by(email=email)
     return users.first()
 
 @app.route('/authenticate', methods=['GET','POST'])
@@ -110,7 +112,7 @@ def authenticate():
     print "Authenticating"
     form = LoginForm()
     if form.validate_on_submit():
-        users = model.User.query.filter_by(username=request.form["name"])
+        users = model.User.query.filter_by(email=form.email.data)
         user = users.first()
         if user != None :
             if pbkdf2_sha256.verify(request.form["password"], user.password) :
@@ -126,15 +128,14 @@ def login():
         return render_template("signin.html",form = form,error = "")
     error = "some fields were empty"
     if form.validate_on_submit():
-        users = model.User.query.filter_by(username = request.form["name"])
-        user = users.first()
+        user = model.User.query.filter_by(email=request.form["email"]).first()
         if user != None :
             if pbkdf2_sha256.verify(request.form["password"],user.password) :
                 user.authenticated = True
                 db.session.commit()
                 login_user(user)
                 return redirect("/")
-        error = "incorrect username or password"
+        error = "incorrect email or password"
     return render_template("signin.html",form = form,error = error);
 
 @app.route('/signup', methods=['GET','POST'])
@@ -160,11 +161,6 @@ def signup():
 def logout():
     logout_user()
     return redirect(request.args.get("redirect"))
-
-@app.route('/getuser', methods=['GET'])
-def getuser():
-    admin = model.User.query.filter_by(username='admin').first()
-    return admin.username
 
 @app.route('/signout')
 @login_required
@@ -196,7 +192,7 @@ def profile():
                 flash("Error for {}".format(error), "danger")
             return render_template("profile.html", form=form)
 
-        current_user.username = form.name.data
+        current_user.name = form.name.data
         current_user.email = form.email.data
         if form.password.data.strip() != "":
             current_user.password = pbkdf2_sha256.encrypt(form.password.data)
@@ -208,9 +204,126 @@ def profile():
 @login_required
 def admin():
     if current_user.is_admin:
-        return render_template('admin.html', form=AddRoomForm())
+        users = model.User.query.all()
+        rooms = model.Room.query.all()
+        return render_template('admin.html', users=users, rooms=rooms)
     # If the user isn't an admin, return them to /
-    return redirect("/")
+    return abort(403)
+
+@app.route('/add/user', methods=['GET', 'POST'])
+@login_required
+def user_add():
+    form = EditUserForm()
+    if current_user.is_admin:
+        if request.method == "POST":
+            if not form.validate_on_submit():
+                for error in form.errors:
+                    flash("Error for {}".format(error), "danger")
+                return render_template("add/user.html", form=form)
+
+            user = model.User(form.name.data, form.email.data)
+            user.password = pbkdf2_sha256.encrypt(form.password.data)
+
+            db.session.add(user)
+            db.session.commit()
+            flash("User added", "success")
+            return redirect("/admin")
+        return render_template("add/user.html", form=EditUserForm())
+    abort(403)
+
+@app.route('/edit/user/<user_id>', methods=['GET', 'POST'])
+@login_required
+def user_edit(user_id):
+    form = EditUserForm()
+    if current_user.is_admin:
+        user = model.User.query.filter_by(id=user_id).first()
+        if request.method == "POST":
+            if not form.validate_on_submit():
+                for error in form.errors:
+                    flash("Error for {}".format(error), "danger")
+                return render_template("add/user.html", form=form)
+
+            user.name = form.name.data
+            user.email = form.email.data
+            user.password = pbkdf2_sha256.encrypt(form.password.data)
+
+            db.session.commit()
+            flash("User edited", "success")
+            return redirect("/admin")
+        return render_template("edit/user.html", form=EditUserForm(), user=user)
+    abort(403)
+
+@app.route('/delete/user/<user_id>', methods=['GET'])
+@login_required
+def user_delete(user_id):
+    if current_user.is_admin:
+        user = model.User.query.filter_by(id=user_id)
+        flash("User {} deleted".format(user.first().name), "success")
+        user.delete()
+        db.session.commit()
+        return redirect("/admin")
+    abort(403)
+
+@app.route('/add/room', methods=['GET', 'POST'])
+@login_required
+def room_add():
+    form = EditRoomForm()
+    if current_user.is_admin:
+        if request.method == "POST":
+            if not form.validate_on_submit():
+                for error in form.errors:
+                    flash("Error for {}".format(error), "danger")
+                return render_template("add/room.html", form=form)
+
+            room = model.Room(form.title.data,
+                              form.number.data,
+                              form.short_description.data,
+                              form.long_description.data,
+                              form.image.data)
+
+            db.session.add(room)
+            db.session.commit()
+            flash("Room added", "success")
+            return redirect("/admin")
+        return render_template("add/room.html", form=EditRoomForm())
+    abort(403)
+
+@app.route('/edit/room/<room_id>', methods=['GET', 'POST'])
+@login_required
+def room_edit(room_id):
+    form = EditRoomForm()
+    if current_user.is_admin:
+        room = model.Room.query.filter_by(id=room_id).first()
+        if request.method == "POST":
+            if not form.validate_on_submit():
+                for error in form.errors:
+                    flash("Error for {}".format(error), "danger")
+                return render_template("add/room.html", form=form)
+
+            room.title = form.title.data
+            room.number = form.number.data
+            room.short_description = form.short_description.data
+            room.long_description = form.long_description.data
+            room.image = form.image.data
+
+            db.session.commit()
+            flash("Room edited", "success")
+            return redirect('/admin')
+        new_edit_form = EditRoomForm()
+        new_edit_form.long_description.data = room.long_description
+        return render_template("edit/room.html", form=new_edit_form, room=room)
+    abort(403)
+
+@app.route('/delete/room/<room_id>', methods=['GET'])
+@login_required
+def room_delete(room_id):
+    if current_user.is_admin:
+        room = model.Room.query.filter_by(id=room_id)
+        flash("Room {} deleted".format(room.first().title), "success")
+        room.delete()
+        db.session.commit()
+        return redirect("/admin")
+    abort(403)
 
 @app.route('/stats', methods=['GET'])
 @login_required
@@ -263,7 +376,7 @@ def get_time_stats():
         numHoursBetween += 1
     currentDay = minTime.day
     currentHour = minTime.hour
-    
+
     for i in range (0, numHoursBetween + 1):
         if (str(currentDay) +" " + str(currentHour)) not in result[0]:
             result[0].extend([str(currentDay) +" " + str(currentHour)])
@@ -287,7 +400,7 @@ def get_time_stats():
 def room(room_id):
     room = model.Room.query.filter_by(id=room_id).first()
     if not room:
-        abort(404)
+        abort(403)
     return render_template('room.html', room=room)
 
 @app.route('/takepicture', methods=['GET'])
@@ -295,41 +408,13 @@ def room(room_id):
 def takepicture():
     return render_template('takepicture.html')
 
-##Actions
-@app.route('/user/add', methods=['POST'])
-@login_required
-def add_user():
-    if current_user.is_admin:
-        print request.form
-        admin()
-    #return render_template('admin.html', form=AddRoomForm())
-
-@app.route('/add/room', methods=['POST'])
-@login_required
-def add_room():
-    if current_user.is_admin:
-        form = AddRoomForm()
-        if not form.validate_on_submit():
-            for error in form.errors:
-                flash("Missing room {}".format(error), "danger")
-            return render_template("admin.html", form=form)
-
-        flash("Room added", "success")
-        room = model.Room(form.title.data, form.number.data, form.short_description.data, form.long_description.data)
-        db.session.add(room)
-        db.session.commit()
-
-        return redirect("/admin")
-    else:
-        abort("418")
-
 # Hybrid QR-codes could go to this view. A QR code might contain:
 # flainted.com:3000/checkin?id=1
 # A user could scan this with their QR code reader, or with our app (which could parse for the id parameter).
 @app.route('/checkin', methods=['GET'])
 def checkin():
     # If the user is anonymous (meaning not logged-in), then this is probably a first-time user.
-    # Display a helpful message about our web application and how they can get started. 
+    # Display a helpful message about our web application and how they can get started.
     if current_user.is_anonymous():
         flash("Howdy, and welcome to CosmicAC! You can use this web app to scan the " +
               "QR codes lying around and get cool information about each room! " +

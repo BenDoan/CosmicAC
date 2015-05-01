@@ -1,0 +1,25 @@
+<div>
+    <a class="btn btn-primary" href="/add/user">Add user</a>
+    <br>
+    <br>
+</div>
+<div class="table-responsive">
+    <table class="table">
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Actions</th>
+        </tr>
+
+        {% for user in users %}
+        <tr>
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td>
+                <a class="btn btn-danger" href="/delete/user/{{ user.id }}"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+                <a class="btn btn-info" href="/edit/user/{{ user.id }}"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>

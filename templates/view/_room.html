@@ -1,0 +1,29 @@
+<div>
+    <a class="btn btn-primary" href="/add/room">Add room</a>
+    <br>
+    <br>
+</div>
+<div class="table-responsive">
+    <table class="table">
+        <tr>
+            <th>Title</th>
+            <th>Number</th>
+            <th>Short Description</th>
+            <th>Long Description</th>
+            <th>Actions</th>
+        </tr>
+
+        {% for room in rooms %}
+        <tr>
+            <td>{{ room.title }}</td>
+            <td>{{ room.number }}</td>
+            <td>{{ room.short_description | truncate(30)}}</td>
+            <td>{{ room.long_description | truncate(30) }}</td>
+            <td>
+                <a class="btn btn-danger" href="/delete/room/{{ room.id }}"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+                <a class="btn btn-info" href="/edit/room/{{ room.id }}"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
