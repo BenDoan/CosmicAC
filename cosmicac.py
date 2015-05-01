@@ -422,6 +422,9 @@ def checkin():
         return redirect("/signin")
 
     roomId = request.args.get('id')
+    
+    # Get just the ID
+    roomId = roomId.split("Room")[-1]
 
     # Redirect to / if no id parameter was specified
     if roomId is None:
