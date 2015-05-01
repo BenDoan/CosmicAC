@@ -443,9 +443,16 @@ def recievepicture():
     if f:
         path = os.path.join(UPLOAD_FOLDER, f.filename)
         f.save(path)
-        if verify_qr(path):
-            flash("Checked in!", "success")
-            return redirect('/')
+        text = verify_qr(path)
+        if text:
+            room_id = text.split("Room")[-1]
+            room = model.Room.query.filter_by(id=room_id).first()
+
+            ci = model.UserHistory(current_user, room)
+            db.session.add(ci)
+            db.session.commit()
+            flash("Checked in to {}!".format(room.title), "success")
+            return redirect('/room/{}'.format(room.id))
         else:
             flash("Invalid QR code", "danger")
             return redirect('/')
@@ -453,7 +460,10 @@ def recievepicture():
 ##Misc
 def verify_qr(path):
     contents = zbarimg(path)
-    return "password" in contents
+    print "QR code contents are {}".format(contents)
+    if "Room" not in contents:
+        return None
+    return contents.strip()
 
 @app.route('/js/<remainder>', methods=['GET'])
 @app.route('/img/<remainder>', methods=['GET'])
