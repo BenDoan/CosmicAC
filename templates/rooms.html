@@ -8,7 +8,7 @@
                 <ul>
                     <li><h3><a href="/room/{{ room.id }}">{{ room.title|e }}</a></h3>
                     <li><b>{{ room.number|e }}</b>
-                    <li><img class="lab-thumb img-responsive" src="{{ room.image }}" />
+                        <li><a href="/room/{{ room.id }}"><img class="lab-thumb img-responsive img-thumbnail" src="{{ room.image }}" /></a>
                     <li><span "lab-tile-desc">{{ room.short_description|e }}</span>
                     <li><a class="btn btn-primary btn-xs" href="/checkin?id={{ room.id }}">Check in</a>
                 </ul>

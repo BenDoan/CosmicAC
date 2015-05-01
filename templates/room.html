@@ -2,9 +2,9 @@
 
 {% block navcontent %}
 <div class="row room">
-    <h2>{{ room.title|e }}</h2>
+    <h2><a href="/room/{{ room.id }}">{{ room.title|e }}</a></h2>
     <p>Room number: {{ room.number }}</p>
-    <img class="img-responsive" src="{{ room.image }}" alt="">
+    <img class="img-responsive img-rounded" src="{{ room.image }}" alt="">
     <br>
     <br>
     <div class="well">

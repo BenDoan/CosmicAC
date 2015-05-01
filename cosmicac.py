@@ -10,8 +10,6 @@ from wtforms import StringField, PasswordField, TextField, TextAreaField
 from wtforms import validators
 from passlib.hash import pbkdf2_sha256
 
-import markdown
-
 try:
     from perform import zbarimg
 except:
