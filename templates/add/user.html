@@ -4,23 +4,26 @@
 <form action="/user/add" method="POST">
     <h2 class="form-signin-heading">Add user</h2>
     <div class="row">
-        <div class="input-group input-group-sm">
-            {{ form.name(class="form-control", placeholder="Name") }}
+        <div class="form-group col-sm-7">
+            {{ form.name(class="form-control", placeholder="Name", class="form-control") }}
         </div>
-        <div class="input-group input-group-sm">
-            {{ form.email(class="form-control", placeholder="Email") }}
+
+        <div class="form-group col-sm-7">
+            {{ form.email(class="form-control", placeholder="Email", class="form-control") }}
         </div>
-        <div class="input-group input-group-sm">
-            {{ form.password(class="form-control", placeholder="New password") }}
+
+        <div class="form-group col-sm-7">
+            {{ form.password(class="form-control", placeholder="New password", class="form-control") }}
         </div>
-        <div class="input-group input-group-sm">
-            {{ form.confirm(class="form-control", placeholder="Confirm new password") }}
+
+        <div class="form-group col-sm-7">
+            {{ form.confirm(class="form-control", placeholder="Confirm new password", class="form-control") }}
         </div>
         <br/>
         {{form.hidden_tag()}}
 
         <div class="form-group col-sm-7">
-            <button type="submit" class="btn btn-primary">Add</button>
+            <button type="submit" class="btn btn-primary btn-block">Add</button>
         </div>
     </div>
 </form>

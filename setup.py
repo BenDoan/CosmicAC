@@ -11,6 +11,28 @@ db.create_all()
 
 create_room( 'Lab1', 'PKI 260', 'Computer lab', 'Computer lab for doing stuff', 'image')
 create_room( 'Lab2', 'PKI 170', 'Computer lab2', 'Computer lab for doing stuff2', 'image2')
+long_desc = """
+We are Zenith lab
+=================
+
+## This is a list of the stuff we do
+
+* This
+* That
+* These
+* Those
+
+## Also:
+
+1. Hello
+1. World
+1. This
+1. Is
+1. A
+1. List
+
+"""
+create_room( 'Zenith Labs', 'PKI 970', 'We do awesome stuff', long_desc, 'image2')
 
 create_user('admin', 'admin@example.com', 'password', is_admin=True)
 create_user('user', 'user@example.com', 'password', is_admin=False)

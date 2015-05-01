@@ -5,23 +5,27 @@
 <form action="/user/edit/{{ user.id }}" method="POST">
     <h2 class="form-signin-heading">Edit user</h2>
     <div class="row">
-        <div class="input-group input-group-sm">
+        <div class="form-group col-sm-7">
+            Name
             {{ form.name(class="form-control", placeholder="Name", value=user.name) }}
         </div>
-        <div class="input-group input-group-sm">
+        <div class="form-group col-sm-7">
+            Email
             {{ form.email(class="form-control", placeholder="Email", value=user.email) }}
         </div>
-        <div class="input-group input-group-sm">
+        <div class="form-group col-sm-7">
+            New Password
             {{ form.password(class="form-control", placeholder="New password") }}
         </div>
-        <div class="input-group input-group-sm">
+        <div class="form-group col-sm-7">
+            Confirm
             {{ form.confirm(class="form-control", placeholder="Confirm new password") }}
         </div>
         <br/>
         {{form.hidden_tag()}}
 
         <div class="form-group col-sm-7">
-            <button type="submit" class="btn btn-primary">Add</button>
+            <button type="submit" class="btn btn-primary btn-block">Add</button>
         </div>
     </div>
 </form>
