@@ -4,15 +4,15 @@
 }
 
 @font-face {
-    font-family: gravitybook;
-    src: url('/static/css/fonts/gravitybook.ttf')
+    font-family: opensans;
+    src: url('/static/css/fonts/opensans.woff')
 }
 
 body {
     padding-top: 20px;
     padding-bottom: 20px;
     background-image: url('/static/img/congruent_outline.png');
-    font-family: gravitybook;
+    font-family: opensans;
 }
 
 nav.navbar .username {
