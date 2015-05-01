@@ -21,7 +21,7 @@
             <td>{{ room.long_description | truncate(30) }}</td>
             <td>
                 <a class="btn btn-danger" href="/delete/room/{{ room.id }}"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
-                <a class="btn btn-info" href="/edit/room/{{ room.id }}"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+                <a class="btn btn-default" href="/edit/room/{{ room.id }}"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
             </td>
         </tr>
         {% endfor %}

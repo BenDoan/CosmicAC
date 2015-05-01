@@ -1,13 +1,15 @@
 {% extends "navbarbase.html" %}
 
 {% block navcontent %}
-    {% with users=users %}
-        {% include "view/_user.html" %}
-    {% endwith %}
+    <div class="admin">
+        {% with users=users %}
+            {% include "view/_user.html" %}
+        {% endwith %}
 
-    <hr>
+        <hr>
 
-    {% with rooms=rooms %}
-        {% include "view/_room.html" %}
-    {% endwith %}
+        {% with rooms=rooms %}
+            {% include "view/_room.html" %}
+        {% endwith %}
+    </div>
 {% endblock %}
