@@ -76,6 +76,22 @@ and air-conditioning), and structural.
 """
 create_room( 'AE Lab', 'PKI 270', 'Architectural Engineering Lab', long_desc2, 'lab3.jpg')
 
+long_desc4 = """
+We are the C-MANTIC Robotics Lab
+=================
+
+## What the C-MANTIC Robotics Lab researches
+
+The main research topics in the lab are autonomous, adaptive, multi-agent/multi-robot systems, multi-robot motion and path planning, multi-robot task planning/allocation, game theory and computational economics and swarm robotics. Some of the research problems we have worked on include distributed robotic terrain or area coverage, multi-robot task allocation, multi-robot formation control, algorithms for dynamic reconfiguration of modular robots, distributed information aggregation using prediction markets, etc.
+The laboratory features state-of-the-art equipment for conducting research in robotics and multi-agent systems. We have all-terrain Coroware Explorer and AscTec Pelican robots, several robots that can be used within the laboratory for conducting experiments such as TurtleBot, Corobot, Khepera II and e-puck, and several licenses of the commercial robot simulator Webots.
+
+## What tools are available
+
+The laboratory features state-of-the-art equipment for conducting research in robotics and multi-agent systems. We have all-terrain Coroware Explorer and AscTec Pelican robots, several robots that can be used within the laboratory for conducting experiments such as TurtleBot, Corobot, Khepera II and e-puck, and several licenses of the commercial robot simulator Webots.
+
+"""
+create_room( 'C-MANTIC Lab', 'PKI 369', 'C-MANTIC Robotics Lab', long_desc4, 'lab4.jpg')
+
 create_user('admin', 'admin@example.com', 'password', is_admin=True)
 create_user('user', 'user@example.com', 'password', is_admin=False)
 create_user('user1', 'user1@example.com', 'password', is_admin=False)
